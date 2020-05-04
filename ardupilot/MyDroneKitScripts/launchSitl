@@ -1,0 +1,34 @@
+#setting this to be read as a bash sript
+#!/bin/bash
+
+#kills the ports upfront before we start using the script to ensure that the ports are not used when the rest of the script is trying to launch them
+kill -9 $(ps -eF | grep QG | awk -F ' ' '{print $2}') > /dev/null 2>&1
+kill -9 $(ps -eF | grep ardu | awk -F ' ' '{print $2}') > /dev/null 2>&1
+kill -9 $(ps -eF | grep mav | awk -F ' ' '{print $2}') > /dev/null 2>&1
+kill -9 $(ps -eF | grep apm | awk -F ' ' '{print $2}') > /dev/null 2>&1
+
+##Launch a SITL instance with the coordinates where the vehicle should be launched from
+/usr/local/bin/dronekit-sitl copter --home=44.5013,-88.0622,0,180&
+
+sleep 5
+
+##Launch QGroundControl, usually when launch QGC it prints a lot of info to avoid that dev/null
+/usr/local/bin/QGC.AppImage 2>/dev/null&
+
+sleep 5
+
+##Start MAVProxy connecting to port 5760 and specifying 2 new ports, screen -dm is a way to set the process in the background
+screen -dm mavproxy.py --master=tcp:127.0.0.1:5760 --out=127.0.0.1:14550 --out=127.0.0.1:5762
+
+##Launch the dronekit-python script. $1 is defining that we want is the first argument that is passed to the virtual drone, 
+# $1 will be resolved first which is a python script
+/usr/bin/python "$1" --connect 127.0.0.1:5762
+#once the python script is executed or finish close or kill the processes started above by using ps -eF for finding the process ID of each program below
+function finish {
+	kill -9 $(ps -eF | grep QG | awk -F ' ' '{print $2}') > /dev/null 2>&1
+	kill -9 $(ps -eF | grep ardu | awk -F ' ' '{print $2}') > /dev/null 2>&1
+	kill -9 $(ps -eF | grep mav | awk -F ' ' '{print $2}') > /dev/null 2>&1
+	kill -9 $(ps -eF | grep apm | awk -F ' ' '{print $2}') > /dev/null 2>&1
+}
+#defining function finish to only run at the end of the script
+trap finish EXIT
