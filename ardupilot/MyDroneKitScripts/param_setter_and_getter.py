@@ -32,10 +32,11 @@ def connectMyCopter():
 
 vehicle = connectMyCopter()
 
-gps_type = vehicle.parameters['GPS_TYPE']
+gps_type = vehicle.parameters['GPS_TYPE']7
+#setting gps param type to 3 = MTK
 vehicle.parameters['GPS_TYPE']=3
 gps_type = vehicle.parameters['GPS_TYPE']
-
+#if statement checkiong if gps type is not equal to 4 then to set it to 4MTK19
 if vehicle.parameters['GPS_TYPE']!=4:
 	vehicle.parameters['GPS_TYPE']=4
 	gps_type = vehicle.parameters['GPS_TYPE']

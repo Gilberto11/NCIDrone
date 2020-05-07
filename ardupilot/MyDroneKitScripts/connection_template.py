@@ -1,15 +1,11 @@
 #Import required dependices
-
 from dronekit import connect, VehicleMode,LocationGlobalRelative,APIException
 import time
 import socket
 import exceptions
 import math
 import argparse
-
-
 #Creating a function to connect the drone(copter)
-
 def connectMyCopter():
 
 	#creating a parse object
@@ -34,9 +30,5 @@ def connectMyCopter():
 	vehicle = connect(connection_string,wait_ready=True)
 	#return the vehicle object
 	return vehicle
-
-
-
-##########MAIN EXECUTABLE###########
-
+#MAIN EXECUTABLE
 vehicle = connectMyCopter()
