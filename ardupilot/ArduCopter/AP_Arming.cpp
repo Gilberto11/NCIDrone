@@ -1,5 +1,5 @@
 #include "Copter.h"
-
+//This file I have worked in the pre-arm conditions before moving forward with development
 // performs pre-arm checks. expects to be called at 1hz.
 void AP_Arming_Copter::update(void)
 {
